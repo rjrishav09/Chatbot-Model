@@ -36,7 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isLoading = false;
 
   // ⚠️ PUT YOUR GROQ API KEY HERE (Keep it secret!)
-  final String groqApiKey = "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"; // ← CHANGE THIS
+  final String groqApiKey = "gsk_2DqIHozuImMhN0ToOrObWGdyb3FYGA"; // ← CHANGE THIS
 
   final String groqUrl = "https://api.groq.com/openai/v1/chat/completions";
 
@@ -63,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
           "Authorization": "Bearer $groqApiKey",
         },
         body: jsonEncode({
-          "model": "llama-3.1-70b-versatile", // or mixtral-8x7b-32768, llama3-8b-8192, etc.
+          "model": "llama-3.1-8b-instant", // or mixtral-8x7b-32768, llama3-8b-8192, etc.
           "messages": messagesForApi,
           "temperature": 0.8,
           "max_tokens": 2048,
@@ -99,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Chat Bot (Direct API)"),
+        title: const Text("Chat Bot "),
       ),
       body: Column(
         children: [
