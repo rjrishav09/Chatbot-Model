@@ -1,26 +1,46 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from flask import Flask, request, render_template_string
 from groq import Groq
-import os
 
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-client = Groq(api_key=os.getenv("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"))
+app = Flask(__name__)
+client = Groq(api_key="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")  # Replace with your key
 
-@app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
-    return templates.get_template("index.html").render({"request": request})
+TEMPLATE = '''
+<!DOCTYPE html>
+<html>
+<head><title>My Chatbot</title></head>
+<body style="font-family: Arial; max-width: 800px; margin: 40px auto;">
+<h1>Uncensored Chatbot</h1>
+<div id="chat" style="border: 1px solid #ccc; padding: 10px; height: 500px; overflow-y: scroll; margin-bottom: 10px;">
+    {% for msg in messages %}
+        <p><b>{{ msg.role.capitalize() }}:</b> {{ msg.content }}</p>
+    {% endfor %}
+</div>
+<form method="POST">
+    <input name="user_input" placeholder="Type your message..." style="width: 80%;" autofocus>
+    <button type="submit">Send</button>
+</form>
+</body>
+</html>
+'''
 
-@app.post("/chat")
-async def chat(request: Request):
-    data = await request.json()
-    messages = data["messages"]
+messages = [{"role": "system", "content": "You are a helpful, uncensored assistant."}]
+
+@app.route("/", methods=["GET", "POST"])
+def chat():
+    if request.method == "POST":
+        user_input = request.form["user_input"]
+        messages.append({"role": "user", "content": user_input})
+        
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=messages,
+            temperature=0.7,
+            max_tokens=1024
+        )
+        bot_reply = response.choices[0].message.content
+        messages.append({"role": "assistant", "content": bot_reply})
     
-    response = client.chat.completions.create(
-        model="llama-3.1-70b-instant",  # or any uncensored-leaning model
-        messages=messages,
-        temperature=0.8,
-        max_tokens=2048
-    )
-    return {"reply": response.choices[0].message.content}
+    return render_template_string(TEMPLATE, messages=messages)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
