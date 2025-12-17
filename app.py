@@ -2,7 +2,7 @@ from flask import Flask, request, render_template_string
 from groq import Groq
 
 app = Flask(__name__)
-client = Groq(api_key="gsk_2DqIHozuImMhN0ToOrOb")  # Replace with your key
+client = Groq(api_key="gsk_2DqIHxxx")  # Replace with your key
 
 TEMPLATE = '''
 <!DOCTYPE html>
