@@ -36,7 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isLoading = false;
 
   // ⚠️ PUT YOUR GROQ API KEY HERE (Keep it secret!)
-  final String groqApiKey = "gsk_2DqIHozuImMhN0ToOrObWGdyb3FYGA"; // ← CHANGE THIS
+  final String groqApiKey = "gsk_2DqI"; // ← CHANGE THIS
 
   final String groqUrl = "https://api.groq.com/openai/v1/chat/completions";
 
